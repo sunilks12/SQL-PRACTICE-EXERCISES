@@ -1,0 +1,19 @@
+Given two tables below, write a query to display the comparison result (higher/lower/same) of 
+the average salary of employees in a department to the company’s average salary.
+
+WITH t1 AS
+(
+	SELECT TO_CHAR(pay_date,'YYYY-MM') as pay_month, department_id, 
+	AVG(amount) OVER(PARTITION BY DATE_PART('month',pay_date),department_id) as dept_avg, 
+	AVG(amount) OVER(PARTITION BY DATE_PART('month',pay_date)) as comp_avg
+	FROM salary as s JOIN employee as e
+	USING (employee_id)
+)
+
+SELECT DISTINCT pay_month, department_id, 
+       CASE WHEN dept_avg > comp_avg THEN 'higher'
+       WHEN dept_avg = comp_avg THEN 'same'
+ELSE 'lower'
+END AS comparison
+FROM t1
+ORDER BY 1 DESC
