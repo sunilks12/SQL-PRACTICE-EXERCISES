@@ -1,3 +1,4 @@
+#!/usr/bin/env sql
 # Solution 1 
 WITH CTE AS (SELECT DISTINCT Salary
 FROM Employee
